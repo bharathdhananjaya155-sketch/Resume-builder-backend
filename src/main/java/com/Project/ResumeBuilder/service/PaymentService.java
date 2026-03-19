@@ -29,10 +29,10 @@ public class PaymentService {
     private final AuthService authService;
     private final UserRepository userRepository;
 
-    @Value("${razorpay.key.id}")
+    @Value("${RAZORPAY_ID}")
     private String razerPayKeyId;
 
-    @Value("${razorpay.key.secret}")
+    @Value("${RAZORPAY_SECRET}")
     private String razerPayKeySecret;
 
 
