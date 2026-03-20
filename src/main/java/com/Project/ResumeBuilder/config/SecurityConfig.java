@@ -38,42 +38,22 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth-> auth.requestMatchers(
-                        "/api/auth/register"
-                                ,"/api/auth/login"
-                                ,"/api/auth/verify-email"
-                                ,"/api/auth/upload-image"
-                                ,"/api/auth/resend-verification"
-                                ,"/actuator/**"
-                ).permitAll()
-                        // React SPA static assets + client routes (single-deploy production)
-                        .requestMatchers(
-                                "/",
-                                "/index.html",
-                                "/assets/**",
-                                "/favicon.ico",
-                                "/favicon.svg",
-                                "/robots.txt",
-                                "/manifest.webmanifest",
-                                "/login",
-                                "/register",
-                                "/dashboard",
-                                "/builder/**",
-                                "/preview/**",
-                                "/404"
-                        ).permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/api/auth/verify-email",
+                                "/api/auth/upload-image",
+                                "/api/auth/resend-verification",
+                                "/actuator/**")
+                        .permitAll()
                         .anyRequest().authenticated())
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
         return http.build();
-
     }
 
     @Bean
