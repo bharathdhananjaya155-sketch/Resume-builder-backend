@@ -82,6 +82,8 @@ public class Resume {
     public static class Template {
         private String theme;
         @ElementCollection
+        @CollectionTable(name = "resume_palette", joinColumns = @JoinColumn(name = "resume_id"))
+        @Column(name = "palette")
         private List<String> palette;
     }
 
